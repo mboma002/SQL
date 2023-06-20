@@ -1,0 +1,64 @@
+In this project, I worked with a database called chinook, which represents a digital media store and includes tables for artists, albums, media tracks, invoices, and customers. 
+The database has 11 related tables. I used SQL lite studio to run various queries on the database.
+
+#1. How many distinct playlists are there in chinook database.?
+
+SELECT COUNT(DISTINCT PlaylistId) AS PlaylistCount 
+FROM Playlists;
+
+#2. What is the average duration of tracks per genre?
+
+SELECT genres.Name, AVG(Milliseconds AS AverageDuration
+FROM genres
+JOIN tracks ON genres.Genreld=tracks.Genreld
+GROUP BY genres.Name;
+
+#3. How many distinct composers are there in the database?
+
+SELECT COUNT(DISTINCT Composer) AS ComposerCount
+FROM tracks
+WHERE Composer IS NOT NULL;
+
+#4. How many different artists are represented in the database?
+
+SELECT COUNT(DISTINCT ArtistId) AS ArtistCount
+FROM Artists;
+
+#5. What is the average number of tracks per album?
+
+SELECT AVG(TrackCount) AS AverageTracksPerAlbum
+FROM (
+SELECT AlbumId, COUNT(*) AS TrackCount
+FROM Tracks
+GROUP BY AlbumId
+) AS TrackCounts;
+
+#6. What are the different media types available in the database?
+
+SELECT DISTINCT MediaTypeId, Name
+FROM Media_Types;
+
+#7. How many customers have made a purchase?
+
+SELECT COUNT(DISTINCT CustomerId) AS CustomerCount
+FROM Invoices;
+
+#8. What is the average invoice total?
+
+SELECT AVG(Total) AS Average_Invoice_Total
+FROM Invoices;
+
+#9. Which customer made the highest purchase in terms of total amount?
+
+SELECT CustomerId, FirstName, LastName, MAX(Total) AS HighestPurchaseAmount
+FROM Invoices
+JOIN Customers ON Invoices.CustomerId = Customers.CustomerId;
+
+#10. What is the total sales revenue for each genre?
+
+SELECT Genres.Name, SUM(Invoices.Total) AS TotalRevenue
+FROM Genres
+JOIN Tracks ON Genres.GenreId = Tracks.GenreId
+JOIN Invoice_items ON Tracks.TrackId = Invoice_items.TrackId
+JOIN Invoices ON Invoice_items.InvoiceId = Invoices.InvoiceId
+GROUP BY Genres.Name;
